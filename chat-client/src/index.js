@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
+import Register from './Register'
 import reportWebVitals from './reportWebVitals'
 import { useNavigate, Route, Routes, BrowserRouter } from 'react-router-dom'
 import { LoginCallback, Security } from '@okta/okta-react'
@@ -23,6 +24,7 @@ function SecuredRoutes(props) {
 		<Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
 			<Routes>
 				<Route path="/" exact element={<App />} />
+				<Route path="/register" exact element={<Register />} />
 				<Route path="/login/callback" element={<LoginCallback />} />
 			</Routes>
 		</Security>
