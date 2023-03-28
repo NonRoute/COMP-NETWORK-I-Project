@@ -1,9 +1,9 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom'
+import { useNavigate, Route, Routes, BrowserRouter } from 'react-router-dom'
 import { LoginCallback, Security } from '@okta/okta-react'
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js'
 
@@ -14,26 +14,28 @@ const oktaAuth = new OktaAuth({
 })
 
 function SecuredRoutes(props) {
-	const history = useHistory()
+	const navigate = useNavigate()
 	const restoreOriginalUri = async (_oktaAuth, originalUri) => {
-		history.replace(toRelativeUrl(originalUri || '/', window.location.origin))
+		navigate(toRelativeUrl(originalUri || '/', window.location.origin), { replace: true })
 	}
 
 	return (
 		<Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-			<Route path="/" exact component={App} />
-			<Route path="/login/callback" component={LoginCallback} />
+			<Routes>
+				<Route path="/" exact element={<App />} />
+				<Route path="/login/callback" element={<LoginCallback />} />
+			</Routes>
 		</Security>
 	)
 }
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(
 	<React.StrictMode>
-		<Router>
+		<BrowserRouter>
 			<SecuredRoutes />
-		</Router>
-	</React.StrictMode>,
-	document.getElementById('root')
+		</BrowserRouter>
+	</React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function
