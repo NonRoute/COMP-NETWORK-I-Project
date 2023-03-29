@@ -6,6 +6,7 @@ import { useOktaAuth } from '@okta/okta-react'
 import { useAuth } from './auth'
 
 import './App.css'
+import { Link } from 'react-router-dom'
 
 function App() {
 	const { oktaAuth, authState } = useOktaAuth()
@@ -35,7 +36,12 @@ function App() {
 				) : (
 					<div>
 						<div>Not signed in</div>
-						<button onClick={login}>Sign in</button>
+						<div>
+							<button onClick={login}>Sign in</button>
+							<Link to={'/register'}>
+								<button>Create account</button>
+							</Link>
+						</div>
 					</div>
 				)}
 			</header>
