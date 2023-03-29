@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./api/index"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
     "@okta/jwt-verifier": "3.0.1",
