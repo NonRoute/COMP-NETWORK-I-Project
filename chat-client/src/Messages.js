@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import './Messages.css'
 
 function Messages({ socket }) {
 	const [messages, setMessages] = useState({})
@@ -31,18 +32,18 @@ function Messages({ socket }) {
 	}, [socket])
 
 	return (
-		<div class="max-w-md w-full">
+		<div className="message-list">
 			{[...Object.values(messages)]
 				.sort((a, b) => a.time - b.time)
 				.map((message) => (
 					<div
 						key={message.id}
-						class="flex flex-row p-2 border-b border-gray-300"
+						className="message-container"
 						title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
 					>
-						<span class="min-w-[120px] text-xs text-gray-500">{message.user.name}:</span>
-						<span class="flex-grow">{message.value}</span>
-						<span class="text-xs text-gray-500">{new Date(message.time).toLocaleTimeString()}</span>
+						<span className="user">{message.user.name}:</span>
+						<span className="message">{message.value}</span>
+						<span className="date">{new Date(message.time).toLocaleTimeString()}</span>
 					</div>
 				))}
 		</div>

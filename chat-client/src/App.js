@@ -5,6 +5,7 @@ import MessageInput from './MessageInput'
 import { useOktaAuth } from '@okta/okta-react'
 import { useAuth } from './auth'
 
+import './App.css'
 import { Link } from 'react-router-dom'
 
 function App() {
@@ -23,40 +24,34 @@ function App() {
 	}, [setSocket, token])
 
 	return (
-		<div class="flex flex-col h-screen">
-			<header class="app-header bg-gray-800 text-white py-4">
+		<div className="App">
+			<header className="app-header">
 				{!authState ? (
 					<div>Loading...</div>
 				) : user ? (
-					<div class="flex flex-row items-center justify-between">
+					<div>
 						<div>Signed in as {user.name}</div>
-						<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-700" onClick={logout}>
-							Sign out
-						</button>
+						<button onClick={logout}>Sign out</button>
 					</div>
 				) : (
-					<div class="flex flex-row items-center justify-between">
+					<div>
 						<div>Not signed in</div>
-						<div class="flex flex-row">
-							<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-700 mr-2" onClick={login}>
-								Sign in
-							</button>
+						<div>
+							<button onClick={login}>Sign in</button>
 							<Link to={'/register'}>
-								<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-700">
-									Create account
-								</button>
+								<button>Create account</button>
 							</Link>
 						</div>
 					</div>
 				)}
 			</header>
 			{socket ? (
-				<div class="chat-container flex-1 flex flex-col items-center justify-center">
+				<div className="chat-container">
 					<Messages socket={socket} />
 					<MessageInput socket={socket} />
 				</div>
 			) : (
-				<div class="flex-1 flex items-center justify-center">Not Connected</div>
+				<div>Not Connected</div>
 			)}
 		</div>
 	)
