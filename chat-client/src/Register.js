@@ -8,7 +8,7 @@ function Register() {
 		firstName: '',
 		lastName: '',
 		email: '',
-		password: ''
+		password: '',
 	})
 
 	const { oktaAuth } = useOktaAuth()
@@ -25,18 +25,18 @@ function Register() {
 					firstName: state.firstName,
 					lastName: state.lastName,
 					email: state.email,
-					login: state.email
+					login: state.email,
 				},
 				credentials: {
 					password: {
-						value: state.password
-					}
-				}
+						value: state.password,
+					},
+				},
 			}
 			const user = await axios.post(`${process.env.REACT_APP_OKTA_ORG_URL}/api/v1/users?activate=true`, newUser, {
 				headers: {
-					Authorization: `SSWS ${process.env.REACT_APP_TOKEN}`
-				}
+					Authorization: `SSWS ${process.env.REACT_APP_TOKEN}`,
+				},
 			})
 			console.log('Created user', user)
 			// Redirect to the login page after successful registration

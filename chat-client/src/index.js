@@ -11,7 +11,7 @@ import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js'
 const oktaAuth = new OktaAuth({
 	issuer: `${process.env.REACT_APP_OKTA_ORG_URL}/oauth2/default`,
 	clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-	redirectUri: `${window.location.origin}/login/callback`
+	redirectUri: `${window.location.origin}/login/callback`,
 })
 
 function SecuredRoutes(props) {
@@ -37,7 +37,7 @@ root.render(
 		<BrowserRouter>
 			<SecuredRoutes />
 		</BrowserRouter>
-	</React.StrictMode>
+	</React.StrictMode>,
 )
 
 // If you want to start measuring performance in your app, pass a function
