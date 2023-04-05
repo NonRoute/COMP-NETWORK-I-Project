@@ -4,8 +4,6 @@ import Messages from './Messages'
 import MessageInput from './MessageInput'
 import { useOktaAuth } from '@okta/okta-react'
 import { useAuth } from './auth'
-
-// import './App.css'
 import { Link } from 'react-router-dom'
 
 function App() {
@@ -25,23 +23,25 @@ function App() {
 
 	return (
 		<div>
-			<header className="p-2 bg-gray-700 text-white">
+			<header class="p-2 bg-gray-700 text-white">
 				{!authState ? (
 					<div>Loading...</div>
 				) : user ? (
-					<div>
+					<div class="flex justify-between items-center">
 						<div>Signed in as {user.name}</div>
-						<button onClick={logout}>Sign out</button>
+						<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500" onClick={logout}>
+							Sign out
+						</button>
 					</div>
 				) : (
 					<div class="flex justify-between items-center">
 						<div>Not signed in</div>
 						<div class="flex gap-2">
-							<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-700" onClick={login}>
+							<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500" onClick={login}>
 								Sign in
 							</button>
 							<Link to={'/register'}>
-								<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-700">
+								<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500">
 									Create account
 								</button>
 							</Link>
