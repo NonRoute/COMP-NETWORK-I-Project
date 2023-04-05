@@ -22,8 +22,8 @@ function App() {
 	}, [setSocket, token])
 
 	return (
-		<div>
-			<header class="p-2 bg-gray-700 text-white">
+		<div class="bg-gradient-to-r from-gray-800 to-gray-700 border-b-1 min-h-screen">
+			<header class="py-2 px-4 text-white">
 				{!authState ? (
 					<div>Loading...</div>
 				) : user ? (
@@ -50,7 +50,7 @@ function App() {
 				)}
 			</header>
 			{socket ? (
-				<div className="flex-1 flex flex-col items-center justify-center">
+				<div class="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
 					<Messages socket={socket} />
 					<MessageInput socket={socket} />
 				</div>

@@ -9,7 +9,7 @@ const NewMessage = ({ socket }) => {
 	}
 
 	return (
-		<form class="max-w-md w-full mx-auto mt-2" onSubmit={submitForm}>
+		<form class="max-w-xl w-full mx-auto mt-2" onSubmit={submitForm}>
 			<input
 				class="w-full px-2 py-1 border-2 border-gray-500 rounded-md"
 				autoFocus
