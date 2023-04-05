@@ -15,8 +15,30 @@ function App() {
 	const [user, token] = useAuth()
 	const [socket, setSocket] = useState(null)
 
+	function getSocketOptions() {
+		let option = {
+			transportOptions: {
+				polling: {
+					extraHeaders: {
+						'ngrok-skip-browser-warning': 'any',
+					},
+				},
+			},
+		}
+		if (token) {
+			return {
+				query: { token },
+				...option,
+			}
+		}
+		return option
+	}
+
 	useEffect(() => {
-		const newSocket = io(`http://${window.location.hostname}:3000`, token && { query: { token } })
+		const newSocket = io(
+			process.env.REACT_APP_SERVER_URL || `http://${window.location.hostname}:3000`,
+			getSocketOptions(),
+		)
 		setSocket(newSocket)
 		return () => newSocket.close()
 	}, [setSocket, token])
