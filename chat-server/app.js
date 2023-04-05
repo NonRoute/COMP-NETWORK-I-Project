@@ -9,7 +9,7 @@ const nodemon = require('nodemon')
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 
-ngrok.connect({ authtoken: process.env.NGROK_TOKEN, addr: 3000 }).then((url) => {
+ngrok.connect({ authtoken: process.env.NGROK_TOKEN, addr: process.env.PORT || 3000 }).then((url) => {
 	console.log(`ngrok tunnel opened at: ${url}`)
 	console.log('Set this as REACT_APP_SERVER_URL in client .env and restart client')
 })
