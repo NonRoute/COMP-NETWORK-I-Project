@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react'
 
 function Messages({ socket }) {
 	const [messages, setMessages] = useState({})
-
+	const timeOptions = {
+		timeZone: 'Asia/Bangkok',
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		hour12: true,
+	}
 	useEffect(() => {
 		const messageListener = (message) => {
 			setMessages((prevMessages) => {
@@ -40,9 +48,17 @@ function Messages({ socket }) {
 						className="flex flex-row p-2 border-b border-gray-300"
 						title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
 					>
-						<span className="mr-2 text-xs text-gray-500">{message.user.name}:</span>
-						<span className="flex-grow">{message.value}</span>
-						<span className="text-xs text-gray-500">{new Date(message.time).toLocaleTimeString()}</span>
+						<li class="list-none">
+							<span class="flex items-center">
+								<button class="text-blue-600 hover:underline focus:outline-none">
+									<b>{message.user.name}</b>
+								</button>
+								<i class="ml-2 text-gray-600 opacity-80">
+									{new Date(message.time).toLocaleTimeString('en-US', timeOptions)}
+								</i>
+							</span>
+							<div class="clear-both pt-1 mt-0.5 pb-3 block">{message.value}</div>
+						</li>
 					</div>
 				))}
 		</div>
