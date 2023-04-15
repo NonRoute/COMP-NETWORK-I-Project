@@ -2,8 +2,12 @@ import React, { useEffect } from 'react'
 import { useOktaAuth } from '@okta/okta-react'
 import { useState } from 'react'
 import axios from 'axios'
+import { useAuth } from './auth'
+import { useNavigate } from 'react-router-dom'
 
 function EditProfile() {
+	const navigate = useNavigate()
+	const [user, token] = useAuth()
 	const [userId, setUserId] = useState()
 	const [state, setState] = useState({
 		firstName: '',
@@ -26,22 +30,17 @@ function EditProfile() {
 					firstName: state.firstName,
 					lastName: state.lastName,
 					email: state.email,
-					login: state.email,
 				},
-				// credentials: {
-				// 	password: {
-				// 		value: state.password,
-				// 	},
-				// },
 			}
-			const user = await axios.put(`${process.env.REACT_APP_OKTA_ORG_URL}/api/v1/users/${userId}`, newUser, {
+
+			// Update current User's Profile
+			const user = await axios.post(`${process.env.REACT_APP_OKTA_ORG_URL}/api/v1/users/me`, newUser, {
 				headers: {
 					Authorization: `SSWS ${process.env.REACT_APP_TOKEN}`,
 				},
 			})
-			console.log('Created user', user)
-			// Redirect to the login page after successful registration
-			// await oktaAuth.signInWithRedirect('/')
+			console.log('Updated user', user)
+			navigate('/')
 		} catch (error) {
 			console.error(error)
 			setError(error.response.data.errorCauses[0].errorSummary)
@@ -49,13 +48,6 @@ function EditProfile() {
 	}
 
 	const fetchData = async () => {
-		// Get current User
-		// const user = await axios.get(`${process.env.REACT_APP_OKTA_ORG_URL}/api/v1/users`, {
-		// 	headers: {
-		// 		Authorization: `SSWS ${process.env.REACT_APP_TOKEN}`,
-		// 		Accept: 'application/json',
-		// 	},
-		// })
 		const user = await oktaAuth.getUser()
 		console.log('Current User', user)
 		setUserId(user.sub)
