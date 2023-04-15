@@ -10,10 +10,10 @@ cd chat-server
 npm install
 npm start
 ```
-4. Start client side
+4. Update `REACT_APP_SERVER_URL` in the `.env` file inside `/chat-client` to match with the ngrok URL in the console after starting the server.
+5. Start client side
 ```
 cd chat-client
 npm install
 npm start
 ```
-5. Update `REACT_APP_SERVER_URL` in the `.env` file inside `/chat-client` to match with the ngrok URL in the console after starting the server.
