@@ -48,16 +48,16 @@ function Messages({ socket }) {
 						className="flex flex-row p-2 border-b border-gray-300"
 						title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
 					>
-						<li class="list-none">
-							<span class="flex items-center">
-								<button class="text-blue-600 hover:underline focus:outline-none">
+						<li className="list-none">
+							<span className="flex items-center">
+								<button className="text-blue-600 hover:underline focus:outline-none">
 									<b>{message.user.name}</b>
 								</button>
-								<i class="ml-2 text-gray-600 opacity-80">
+								<i className="ml-2 text-gray-600 opacity-80">
 									{new Date(message.time).toLocaleTimeString('en-US', timeOptions)}
 								</i>
 							</span>
-							<div class="clear-both pt-1 mt-0.5 pb-3 block">{message.value}</div>
+							<div className="clear-both pt-1 mt-0.5 pb-3 block">{message.value}</div>
 						</li>
 					</div>
 				))}
