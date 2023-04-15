@@ -51,9 +51,14 @@ function App() {
 				) : user ? (
 					<div class="flex justify-between items-center">
 						<div>Signed in as {user.name}</div>
-						<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500" onClick={logout}>
-							Sign out
-						</button>
+						<div class="flex gap-2">
+							<Link to={'/edit'}>
+								<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500">Edit profile</button>
+							</Link>
+							<button class="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500" onClick={logout}>
+								Sign out
+							</button>
+						</div>
 					</div>
 				) : (
 					<div class="flex justify-between items-center">

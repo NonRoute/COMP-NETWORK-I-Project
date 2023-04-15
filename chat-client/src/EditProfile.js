@@ -40,6 +40,8 @@ function EditProfile() {
 				},
 			})
 			console.log('Updated user', user)
+			alert('Update successful. Data may take time to appear on website.')
+
 			navigate('/')
 		} catch (error) {
 			console.error(error)
