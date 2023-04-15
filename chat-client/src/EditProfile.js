@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useOktaAuth } from '@okta/okta-react'
 import { useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './auth'
 
 function EditProfile() {
@@ -37,7 +37,7 @@ function EditProfile() {
 					Authorization: `SSWS ${process.env.REACT_APP_TOKEN}`,
 				},
 			})
-			console.log('Updated user', user)
+			// console.log('Updated user', user)
 			alert('Update successful. Changes will appear soon.')
 			navigate('/')
 		} catch (error) {
@@ -113,7 +113,12 @@ function EditProfile() {
 						onChange={inputValue('email')}
 					/>
 				</div>
-				<div className="flex justify-center">
+				<div className="flex justify-center gap-4">
+					<Link to={'/'} className="w-full">
+						<button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md w-full">
+							Cancel
+						</button>
+					</Link>
 					<button
 						className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md w-full"
 						type="submit"
