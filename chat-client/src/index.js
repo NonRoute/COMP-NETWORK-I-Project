@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals'
 import { useNavigate, Route, Routes, BrowserRouter } from 'react-router-dom'
 import { LoginCallback, Security } from '@okta/okta-react'
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js'
+import EditProfile from './EditProfile'
 
 const oktaAuth = new OktaAuth({
 	issuer: `${process.env.REACT_APP_OKTA_ORG_URL}/oauth2/default`,
@@ -26,6 +27,7 @@ function SecuredRoutes(props) {
 				<Route path="/" exact element={<App />} />
 				<Route path="/register" exact element={<Register />} />
 				<Route path="/login/callback" element={<LoginCallback />} />
+				<Route path="/edit" element={<EditProfile />} />
 			</Routes>
 		</Security>
 	)
