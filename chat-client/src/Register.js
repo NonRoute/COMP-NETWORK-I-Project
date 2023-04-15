@@ -49,68 +49,68 @@ function Register() {
 	}
 
 	return (
-		<div class="bg-gradient-to-r from-gray-800 to-gray-700 min-h-screen flex flex-col items-center justify-center">
-			<h2 class="text-5xl font-bold text-white text-center mb-6">Register</h2>
+		<div className="bg-gradient-to-r from-gray-800 to-gray-700 min-h-screen flex flex-col items-center justify-center">
+			<h2 className="text-5xl font-bold text-white text-center mb-6">Register</h2>
 			<form
-				class="border border-gray-500 p-6 rounded-lg min-w-[300px] w-2/3 max-w-xl bg-gray-900 bg-opacity-70 mx-5"
+				className="border border-gray-500 p-6 rounded-lg min-w-[300px] w-2/3 max-w-xl bg-gray-900 bg-opacity-70 mx-5"
 				onSubmit={handleSubmit}
 			>
 				{error && ( // render the error message if error state is not null
-					<div class="bg-gradient-to-r from-red-800 to-red-700 text-white text-center mb-6 py-2 px-4 rounded-md">
+					<div className="bg-gradient-to-r from-red-800 to-red-700 text-white text-center mb-6 py-2 px-4 rounded-md">
 						{error}
 					</div>
 				)}
-				<div class="mb-6">
-					<label class="block font-medium text-white mb-2" for="firstName">
+				<div className="mb-6">
+					<label className="block font-medium text-white mb-2" for="firstName">
 						First Name
 					</label>
 					<input
-						class="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
+						className="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
 						type="text"
 						id="firstName"
 						value={state.firstName}
 						onChange={inputValue('firstName')}
 					/>
 				</div>
-				<div class="mb-6">
-					<label class="block font-medium text-white mb-2" for="lastName">
+				<div className="mb-6">
+					<label className="block font-medium text-white mb-2" for="lastName">
 						Last Name
 					</label>
 					<input
-						class="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
+						className="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
 						type="text"
 						id="lastName"
 						value={state.lastName}
 						onChange={inputValue('lastName')}
 					/>
 				</div>
-				<div class="mb-6">
-					<label class="block font-medium text-white mb-2" for="email">
+				<div className="mb-6">
+					<label className="block font-medium text-white mb-2" for="email">
 						Email
 					</label>
 					<input
-						class="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
+						className="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
 						type="email"
 						id="email"
 						value={state.email}
 						onChange={inputValue('email')}
 					/>
 				</div>
-				<div class="mb-6">
-					<label class="block font-medium text-white mb-2" for="password">
+				<div className="mb-6">
+					<label className="block font-medium text-white mb-2" for="password">
 						Password
 					</label>
 					<input
-						class="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
+						className="form-input w-full py-2 px-4 text-gray-900 bg-white rounded-md shadow-sm"
 						type="password"
 						id="password"
 						value={state.password}
 						onChange={inputValue('password')}
 					/>
 				</div>
-				<div class="flex justify-center">
+				<div className="flex justify-center">
 					<button
-						class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md w-full"
+						className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md w-full"
 						type="submit"
 					>
 						Register

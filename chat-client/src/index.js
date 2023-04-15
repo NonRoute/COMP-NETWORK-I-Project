@@ -8,6 +8,7 @@ import { useNavigate, Route, Routes, BrowserRouter } from 'react-router-dom'
 import { LoginCallback, Security } from '@okta/okta-react'
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js'
 import EditProfile from './EditProfile'
+import { useAuth } from './auth'
 
 const oktaAuth = new OktaAuth({
 	issuer: `${process.env.REACT_APP_OKTA_ORG_URL}/oauth2/default`,
@@ -26,8 +27,8 @@ function SecuredRoutes(props) {
 			<Routes>
 				<Route path="/" exact element={<App />} />
 				<Route path="/register" exact element={<Register />} />
-				<Route path="/login/callback" element={<LoginCallback />} />
-				<Route path="/edit" element={<EditProfile />} />
+				<Route path="/login/callback" exact element={<LoginCallback />} />
+				<Route path="/edit" exact element={<EditProfile />} />
 			</Routes>
 		</Security>
 	)
