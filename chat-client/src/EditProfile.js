@@ -2,13 +2,10 @@ import React, { useEffect } from 'react'
 import { useOktaAuth } from '@okta/okta-react'
 import { useState } from 'react'
 import axios from 'axios'
-import { useAuth } from './auth'
 import { useNavigate } from 'react-router-dom'
 
 function EditProfile() {
 	const navigate = useNavigate()
-	const [user, token] = useAuth()
-	const [userId, setUserId] = useState()
 	const [state, setState] = useState({
 		firstName: '',
 		lastName: '',
@@ -40,8 +37,7 @@ function EditProfile() {
 				},
 			})
 			console.log('Updated user', user)
-			alert('Update successful. Data may take time to appear on website.')
-
+			alert('Update successful. Changes will appear soon.')
 			navigate('/')
 		} catch (error) {
 			console.error(error)
@@ -52,7 +48,6 @@ function EditProfile() {
 	const fetchData = async () => {
 		const user = await oktaAuth.getUser()
 		console.log('Current User', user)
-		setUserId(user.sub)
 		setState({
 			firstName: user.given_name,
 			lastName: user.family_name,
