@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
+import { Socket } from 'socket.io-client'
 
-const NewMessage = ({ socket }) => {
+const NewMessage = ({ socket, groupName }: { socket: Socket; groupName: string }) => {
 	const [value, setValue] = useState('')
 	const submitForm = (e) => {
 		e.preventDefault()
-		socket.emit('message', value)
+		socket.emit('groupMessage', { groupName, value })
 		setValue('')
 	}
 

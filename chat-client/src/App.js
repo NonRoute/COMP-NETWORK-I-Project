@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import Messages from './Messages'
 import MessageInput from './MessageInput'
+import Groups from './Groups'
 import { useOktaAuth } from '@okta/okta-react'
 import { useAuth } from './auth'
 import { Link } from 'react-router-dom'
@@ -35,12 +36,12 @@ function App() {
 	}
 
 	useEffect(() => {
-		const newSocket = io(
+		const newSocket = io.connect(
 			process.env.REACT_APP_SERVER_URL || `http://${window.location.hostname}:3000`,
 			getSocketOptions(),
 		)
 		setSocket(newSocket)
-		return () => newSocket.close()
+		return () => newSocket.disconnect()
 	}, [setSocket, token])
 
 	return (
@@ -53,7 +54,9 @@ function App() {
 						<div>Signed in as {user.name}</div>
 						<div className="flex gap-2">
 							<Link to={'/edit'}>
-								<button className="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500">Edit profile</button>
+								<button className="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500">
+									Edit profile
+								</button>
 							</Link>
 							<button className="px-2 py-1 bg-gray-600 rounded-md hover:bg-gray-500" onClick={logout}>
 								Sign out
@@ -78,8 +81,7 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
-					<Messages socket={socket} />
-					<MessageInput socket={socket} />
+					<Groups socket={socket} />
 				</div>
 			) : (
 				<div className="flex-1 flex items-center justify-center">Not Connected</div>

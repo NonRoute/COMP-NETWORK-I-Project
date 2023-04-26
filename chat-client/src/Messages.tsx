@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { Message } from './types'
+import { Socket } from 'socket.io-client'
+import { DateTimeFormatOptions } from 'intl'
 
-function Messages({ socket }) {
-	const [messages, setMessages] = useState({})
-	const timeOptions = {
+function Messages({ socket, groupName }: { socket: Socket; groupName: string }) {
+	const [messages, setMessages] = useState<Message[]>([])
+	const timeOptions: DateTimeFormatOptions = {
 		timeZone: 'Asia/Bangkok',
 		day: 'numeric',
 		month: 'long',
@@ -11,36 +14,25 @@ function Messages({ socket }) {
 		minute: 'numeric',
 		hour12: true,
 	}
+
 	useEffect(() => {
-		const messageListener = (message) => {
+		socket.on('newGroupMessage', (message: Message) => {
 			setMessages((prevMessages) => {
-				const newMessages = { ...prevMessages }
-				newMessages[message.id] = message
+				const newMessages = [...prevMessages, message]
 				return newMessages
 			})
-		}
+		})
 
-		const deleteMessageListener = (messageID) => {
-			setMessages((prevMessages) => {
-				const newMessages = { ...prevMessages }
-				delete newMessages[messageID]
-				return newMessages
-			})
-		}
-
-		socket.on('message', messageListener)
-		socket.on('deleteMessage', deleteMessageListener)
-		socket.emit('getMessages')
+		socket.emit('getGroupMessages', groupName)
 
 		return () => {
-			socket.off('message', messageListener)
-			socket.off('deleteMessage', deleteMessageListener)
+			socket.off('newGroupMessage')
 		}
 	}, [socket])
 
 	return (
 		<div className="max-w-xl w-full">
-			{[...Object.values(messages)]
+			{messages
 				.sort((a, b) => a.time - b.time)
 				.map((message) => (
 					<div
@@ -51,7 +43,7 @@ function Messages({ socket }) {
 						<li className="list-none">
 							<span className="flex items-center">
 								<button className="text-blue-600 hover:underline focus:outline-none">
-									<b>{message.user.name}</b>
+									<b>{message.user}</b>
 								</button>
 								<i className="ml-2 text-gray-600 opacity-80">
 									{new Date(message.time).toLocaleTimeString('en-US', timeOptions)}
