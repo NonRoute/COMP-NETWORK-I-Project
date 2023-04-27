@@ -1,6 +1,5 @@
 // Users.tsx
 import React, { useEffect, useState } from 'react'
-import { Socket } from 'socket.io-client'
 
 function Users({ socket, onClickUser }: { socket: any; onClickUser: (groupName: string) => void }) {
 	const [users, setUsers] = useState<string[]>([])

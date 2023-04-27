@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Group } from './types'
-import Messages from './Messages'
-import MessageInput from './MessageInput'
 
 function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupName: string) => void }) {
 	const [groups, setGroups] = useState<Group[]>([])

@@ -138,23 +138,25 @@ function chat(io: Server) {
 			groups.forEach((group, groupName) => sendNewGroup(groupName, group))
 		})
 
-		socket.on('createGroup', (groupName) => {
+		function createGroup(groupName: string) {
 			if (!groups.has(groupName)) {
 				groups.set(groupName, { users: [], messages: [] })
 				const group = groups.get(groupName)!
 				sendNewGroup(groupName, group)
 				console.log(`Group "${groupName}" created`)
 			}
-		})
+		}
+		socket.on('createGroup', createGroup)
 
-		socket.on('joinGroup', (groupName) => {
+		function joinGroup(groupName: string) {
 			const group = groups.get(groupName)!
 			if (!group.users.includes(myUser)) {
 				group.users.push(myUser)
 				socket.join(groupName)
 				console.log(`${myUser} joined group "${groupName}"`)
 			}
-		})
+		}
+		socket.on('joinGroup', joinGroup)
 
 		socket.on('leaveGroup', (groupName) => {
 			if (groups.has(groupName)) {
@@ -165,7 +167,7 @@ function chat(io: Server) {
 			}
 		})
 
-		socket.on('groupMessage', ({ groupName, value}) => {
+		socket.on('groupMessage', ({ groupName, value }) => {
 			if (groups.has(groupName)) {
 				const group = groups.get(groupName)!
 				const newMessage: Message = {
@@ -186,6 +188,20 @@ function chat(io: Server) {
 				group.messages.forEach((message) => socket.emit('newGroupMessage', message))
 				console.log(`Sent ${group.messages.length} messages from "${groupName} to ${myUser}`)
 			}
+		})
+
+		// Also create if not exist
+		socket.on('getDMGroupName', (otherUser: string) => {
+			let groupName: string
+			if (groups.has(`${myUser}-${otherUser}`)) {
+				groupName = `${myUser}-${otherUser}`
+			} else if (groups.has(`${otherUser}-${myUser}`)) {
+				groupName = `${otherUser}-${myUser}`
+			} else {
+				groupName = `${myUser}-${otherUser}`
+				createGroup(groupName)
+			}
+			socket.emit('DMGroupName', groupName)
 		})
 
 		socket.on('disconnect', () => {
