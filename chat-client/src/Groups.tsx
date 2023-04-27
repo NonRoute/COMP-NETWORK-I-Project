@@ -36,6 +36,7 @@ function Groups({ socket }) {
 
 	return (
 		<div className="max-w-xl w-full">
+			<h3 className="font-bold mb-2">Groups:</h3>
 			{groups.map((group) => {
 				return (
 					<button
