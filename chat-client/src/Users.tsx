@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Socket } from 'socket.io-client'
 
-function Users({ socket }: { socket: Socket }) {
+function Users({ socket, onClickUser }: { socket: any; onClickUser: (groupName: string) => void }) {
 	const [users, setUsers] = useState<string[]>([])
 
 	useEffect(() => {
@@ -17,10 +17,6 @@ function Users({ socket }: { socket: Socket }) {
 		}
 	}, [socket])
 
-	function handleUserClick(user: string) {
-		// socket.emit('joinGroup')
-	}
-
 	return (
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Other Users:</h3>
@@ -28,7 +24,7 @@ function Users({ socket }: { socket: Socket }) {
 				return (
 					<button
 						className="mb-1 text-left w-full text-blue-600 hover:text-blue-800"
-						onClick={() => handleUserClick(user)}
+						onClick={() => onClickUser(user)}
 						key={user}
 					>
 						{user}

@@ -16,6 +16,11 @@ function App() {
 
 	const [user, token] = useAuth()
 	const [socket, setSocket] = useState(null)
+	const [selectGroup, setSelectGroup] = useState(null)
+
+	function handleSelectGroup(name) {
+		setSelectGroup(name)
+	}
 
 	function getSocketOptions() {
 		let option = {
@@ -82,8 +87,17 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
-					<Groups socket={socket} />
 					<Users socket={socket} />
+					<Groups socket={socket} onClickGroup={handleSelectGroup}/>
+					<div>current group: {selectGroup}</div>
+					{selectGroup ? (
+						<>
+							<Messages socket={socket} groupName={selectGroup} />
+							<MessageInput socket={socket} groupName={selectGroup} key={selectGroup} />
+						</>
+					) : (
+						<div>no group selected</div>
+					)}
 				</div>
 			) : (
 				<div className="flex-1 flex items-center justify-center">Not Connected</div>

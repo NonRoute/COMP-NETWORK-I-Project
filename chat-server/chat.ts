@@ -133,31 +133,27 @@ function chat(io: Server) {
 		function sendNewGroup(groupName: string, group: Group) {
 			socket.emit('newGroup', { name: groupName, ...group })
 		}
-		socket.on('joinGroup', (groupName) => {
-			if (!groups.has(groupName)) {
-				groups.set(groupName, { users: [], messages: [] })
-				console.log(`Group "${groupName}" created`)
-				const group = groups.get(groupName)!
-				if (!group.users.includes(myUser)) {
-					group.users.push(myUser)
-					socket.join(groupName)
-					socket.emit('joinedGroup', groups.get(groupName).messages)
-					console.log(`${myUser} joined group "${groupName}"`)
-				}
-				sendNewGroup(groupName, group)
-			} else {
-				const group = groups.get(groupName)!
-				if (!group.users.includes(myUser)) {
-					group.users.push(myUser)
-					socket.join(groupName)
-					socket.emit('joinedGroup', groups.get(groupName).messages)
-					console.log(`${myUser} joined group "${groupName}"`)
-				}
-			}
-		})
 
 		socket.on('getAllGroups', () => {
 			groups.forEach((group, groupName) => sendNewGroup(groupName, group))
+		})
+
+		socket.on('createGroup', (groupName) => {
+			if (!groups.has(groupName)) {
+				groups.set(groupName, { users: [], messages: [] })
+				const group = groups.get(groupName)!
+				sendNewGroup(groupName, group)
+				console.log(`Group "${groupName}" created`)
+			}
+		})
+
+		socket.on('joinGroup', (groupName) => {
+			const group = groups.get(groupName)!
+			if (!group.users.includes(myUser)) {
+				group.users.push(myUser)
+				socket.join(groupName)
+				console.log(`${myUser} joined group "${groupName}"`)
+			}
 		})
 
 		socket.on('leaveGroup', (groupName) => {
@@ -169,26 +165,26 @@ function chat(io: Server) {
 			}
 		})
 
-		function sendGroupMessage(groupName: string, message: Message) {
-			io.to(groupName).emit('newGroupMessage', message)
-		}
-		socket.on('groupMessage', ({ groupName, value }) => {
+		socket.on('groupMessage', ({ groupName, value}) => {
 			if (groups.has(groupName)) {
 				const group = groups.get(groupName)!
-				const newMessage = {
+				const newMessage: Message = {
 					id: uuidv4(),
 					user: myUser,
 					value: value,
 					time: Date.now(),
 				}
 				group.messages.push(newMessage)
-				sendGroupMessage(groupName, newMessage)
+				io.to(groupName).emit('newGroupMessage', newMessage)
+				console.log(`Sent "${value} to ${groupName}`)
 			}
 		})
 
 		socket.on('getGroupMessages', (groupName) => {
 			if (groups.has(groupName)) {
-				groups.get(groupName)!.messages.forEach((message) => sendGroupMessage(groupName, message))
+				const group = groups.get(groupName)!
+				group.messages.forEach((message) => socket.emit('newGroupMessage', message))
+				console.log(`Sent ${group.messages.length} messages from "${groupName} to ${myUser}`)
 			}
 		})
 

@@ -16,7 +16,9 @@ function Messages({ socket, groupName }: { socket: any; groupName: string }) {
 	}
 
 	useEffect(() => {
+		console.log('x')
 		socket.on('newGroupMessage', (message: Message) => {
+			console.log('new')
 			setMessages((prevMessages) => {
 				const newMessages = [...prevMessages, message]
 				return newMessages
@@ -29,12 +31,13 @@ function Messages({ socket, groupName }: { socket: any; groupName: string }) {
 	}, [socket])
 
 	useEffect(() => {
+		console.log('get messages')
 		setMessages([])
-		socket.join(groupName)
 		socket.emit('getGroupMessages', groupName)
+		socket.emit('joinGroup', groupName)
 
 		return () => {
-			socket.leave(groupName)
+			socket.emit('leaveGroup', groupName)
 		}
 	}, [groupName])
 
