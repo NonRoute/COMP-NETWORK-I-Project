@@ -3,7 +3,7 @@ import { Message } from './types'
 import { Socket } from 'socket.io-client'
 import { DateTimeFormatOptions } from 'intl'
 
-function Messages({ socket, groupName }: { socket: Socket; groupName: string }) {
+function Messages({ socket, groupName }: { socket: any; groupName: string }) {
 	const [messages, setMessages] = useState<Message[]>([])
 	const timeOptions: DateTimeFormatOptions = {
 		timeZone: 'Asia/Bangkok',
@@ -23,12 +23,20 @@ function Messages({ socket, groupName }: { socket: Socket; groupName: string }) 
 			})
 		})
 
-		socket.emit('getGroupMessages', groupName)
-
 		return () => {
 			socket.off('newGroupMessage')
 		}
 	}, [socket])
+
+	useEffect(() => {
+		setMessages([])
+		socket.join(groupName)
+		socket.emit('getGroupMessages', groupName)
+
+		return () => {
+			socket.leave(groupName)
+		}
+	}, [groupName])
 
 	return (
 		<div className="max-w-xl w-full">

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Group } from './types'
 import { Socket } from 'socket.io-client'
+import Messages from './Messages'
+import MessageInput from './MessageInput'
 
-function Groups({ socket }: { socket: Socket }) {
+function Groups({ socket }) {
 	const [groups, setGroups] = useState<Group[]>([])
 	const [groupName, setGroupName] = useState('')
+	const [selectGroup, setSelectGroup] = useState<Group>(null)
 
 	useEffect(() => {
 		socket.on('newGroup', (group) => {
-			console.log(group)
 			setGroups((prevGroups) => {
 				const newGroups = [...prevGroups, group]
 				return newGroups
@@ -28,14 +30,17 @@ function Groups({ socket }: { socket: Socket }) {
 		setGroupName('')
 	}
 
+	function handleSelectGroup(name: string) {
+		setSelectGroup(groups.find((group) => group.name === name))
+	}
+
 	return (
 		<div className="max-w-xl w-full">
 			{groups.map((group) => {
-				console.log('Rendering group:', group.name)
 				return (
 					<button
 						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-						onClick={() => console.log('Button clicked!')}
+						onClick={() => handleSelectGroup(group.name)}
 						key={group.name}
 					>
 						{group.name}
@@ -53,6 +58,14 @@ function Groups({ socket }: { socket: Socket }) {
 					}}
 				/>
 			</form>
+			{selectGroup ? (
+				<>
+					<Messages socket={socket} groupName={selectGroup.name}></Messages>
+					<MessageInput socket={socket} groupName={selectGroup.name} key={selectGroup.name}></MessageInput>
+				</>
+			) : (
+				<div>no group selected</div>
+			)}
 		</div>
 	)
 }

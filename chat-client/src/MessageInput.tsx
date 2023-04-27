@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Socket } from 'socket.io-client'
 
-const NewMessage = ({ socket, groupName }: { socket: Socket; groupName: string }) => {
+const MessageInput = ({ socket, groupName }: { socket: Socket; groupName: string }) => {
 	const [value, setValue] = useState('')
 	const submitForm = (e) => {
 		e.preventDefault()
@@ -24,4 +24,4 @@ const NewMessage = ({ socket, groupName }: { socket: Socket; groupName: string }
 	)
 }
 
-export default NewMessage
+export default MessageInput
