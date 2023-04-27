@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"strict": false,
-		"noImplicitAny": false
+		"noImplicitAny": false,
+		"lib": ["DOM", "DOM.Iterable", "es2019"]
 	}
 }

@@ -3,6 +3,7 @@ import io from 'socket.io-client'
 import Messages from './Messages'
 import MessageInput from './MessageInput'
 import Groups from './Groups'
+import Users from './Users'
 import { useOktaAuth } from '@okta/okta-react'
 import { useAuth } from './auth'
 import { Link } from 'react-router-dom'
@@ -82,6 +83,7 @@ function App() {
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
 					<Groups socket={socket} />
+					<Users socket={socket} />
 				</div>
 			) : (
 				<div className="flex-1 flex items-center justify-center">Not Connected</div>

@@ -30,6 +30,7 @@ function Groups({ socket }: { socket: Socket }) {
 
 	return (
 		<div className="max-w-xl w-full">
+			<h3 className="font-bold mb-2">Groups:</h3>
 			{groups.map((group) => {
 				console.log('Rendering group:', group.name)
 				return (
