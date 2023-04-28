@@ -1,21 +1,13 @@
 // Users.tsx
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-function Users({ socket, onClickUser }: { socket: any; onClickUser: (groupName: string) => void }) {
-	const [users, setUsers] = useState<Array<[string, string]>>([])
-
-	useEffect(() => {
-		socket.on('otherUser', (user: [string, string]) => {
-			setUsers((prevUsers) => [...prevUsers, user])
-		})
-
-		socket.emit('getAllUser')
-
-		return () => {
-			socket.off('otherUser')
-		}
-	}, [socket])
-
+function Users({
+	onClickUser,
+	users,
+}: {
+	onClickUser: (groupName: string) => void
+	users: [string, string][]
+}) {
 	return (
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Other Users:</h3>

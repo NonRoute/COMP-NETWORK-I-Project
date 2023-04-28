@@ -17,13 +17,14 @@ function App() {
 	const [user, token] = useAuth()
 	const [socket, setSocket] = useState(null)
 	const [selectGroup, setSelectGroup] = useState(null)
+	const [users, setUsers] = useState([])
 
 	function handleSelectGroup(groupName) {
 		setSelectGroup(groupName)
 	}
 
-	function handleSelectUser(username) {
-		socket.emit('getDMGroupName', username)
+	function handleSelectUser(userId) {
+		socket.emit('getDMGroupName', userId)
 	}
 
 	function getSocketOptions() {
@@ -60,8 +61,15 @@ function App() {
 				setSelectGroup(groupName)
 			})
 
+			socket.on('otherUser', (user) => {
+				setUsers((prevUsers) => [...prevUsers, user])
+			})
+
+			socket.emit('getAllUser')
+
 			return () => {
 				socket.off('DMGroupName')
+				socket.off('otherUser')
 			}
 		}
 	}, [socket])
@@ -103,12 +111,12 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
-					<Users socket={socket} onClickUser={handleSelectUser} />
+					<Users onClickUser={handleSelectUser} users={users}/>
 					<Groups socket={socket} onClickGroup={handleSelectGroup} />
 					{selectGroup ? <div>current group: {selectGroup}</div> : <div>no group selected</div>}
 					{selectGroup ? (
 						<>
-							<Messages socket={socket} groupName={selectGroup} />
+							<Messages socket={socket} groupName={selectGroup} users={users} />
 							<MessageInput socket={socket} groupName={selectGroup} />
 						</>
 					) : (

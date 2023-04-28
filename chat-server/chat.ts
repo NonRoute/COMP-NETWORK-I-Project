@@ -120,8 +120,8 @@ function chat(io: Server) {
 	io.use(authHandler)
 	io.on('connection', (socket) => {
 		// const [myUser, nickname] = users.get(socket) ?? defaultUser
-		const [userId, nickname] = users.get(socket) ?? defaultUser
-		console.log(`User "${nickname}" connected`)
+		const myUserId = (users.get(socket) ?? defaultUser)[0]
+		console.log(`User "${myUserId}" connected`)
 
 		function sendOtherUser(userId, nickname) {
 			socket.emit('otherUser', [userId, nickname])
@@ -145,7 +145,7 @@ function chat(io: Server) {
 
 		function createGroup(groupName: string) {
 			if (!groups.has(groupName)) {
-				groups.set(groupName, { users: [], messages: [] })
+				groups.set(groupName, { usersId: [], messages: [] })
 				const group = groups.get(groupName)!
 				sendNewGroup(groupName, group)
 				console.log(`Group "${groupName}" created`)
@@ -155,10 +155,10 @@ function chat(io: Server) {
 
 		function joinGroup(groupName: string) {
 			const group = groups.get(groupName)!
-			if (!group.users.includes(myUser)) {
-				group.users.push(myUser)
+			if (!group.usersId.includes(myUserId)) {
+				group.usersId.push(myUserId)
 				socket.join(groupName)
-				console.log(`${myUser} joined group "${groupName}"`)
+				console.log(`${myUserId} joined group "${groupName}"`)
 			}
 		}
 		socket.on('joinGroup', joinGroup)
@@ -166,9 +166,9 @@ function chat(io: Server) {
 		socket.on('leaveGroup', (groupName) => {
 			if (groups.has(groupName)) {
 				const group = groups.get(groupName)!
-				group.users = group.users.filter((user) => user !== myUser)
+				group.usersId = group.usersId.filter((user) => user !== myUserId)
 				socket.leave(groupName)
-				console.log(`${myUser} left group "${groupName}"`)
+				console.log(`${myUserId} left group "${groupName}"`)
 			}
 		})
 
@@ -177,7 +177,7 @@ function chat(io: Server) {
 				const group = groups.get(groupName)!
 				const newMessage: Message = {
 					id: uuidv4(),
-					user: myUser,
+					userId: myUserId,
 					value: value,
 					time: Date.now(),
 				}
@@ -191,19 +191,19 @@ function chat(io: Server) {
 			if (groups.has(groupName)) {
 				const group = groups.get(groupName)!
 				group.messages.forEach((message) => socket.emit('newGroupMessage', message))
-				console.log(`Sent ${group.messages.length} messages from "${groupName} to ${myUser}`)
+				console.log(`Sent ${group.messages.length} messages from "${groupName} to ${myUserId}`)
 			}
 		})
 
 		// Also create if not exist
-		socket.on('getDMGroupName', (otherUser: string) => {
+		socket.on('getDMGroupName', (otherUserId: string) => {
 			let groupName: string
-			if (groups.has(`${myUser}-${otherUser}`)) {
-				groupName = `${myUser}-${otherUser}`
-			} else if (groups.has(`${otherUser}-${myUser}`)) {
-				groupName = `${otherUser}-${myUser}`
+			if (groups.has(`${myUserId}-${otherUserId}`)) {
+				groupName = `${myUserId}-${otherUserId}`
+			} else if (groups.has(`${otherUserId}-${myUserId}`)) {
+				groupName = `${otherUserId}-${myUserId}`
 			} else {
-				groupName = `${myUser}-${otherUser}`
+				groupName = `${myUserId}-${otherUserId}`
 				createGroup(groupName)
 			}
 			socket.emit('DMGroupName', groupName)
@@ -212,7 +212,7 @@ function chat(io: Server) {
 		socket.on('disconnect', () => {
 			// activeUsernames.delete(myUser)
 			users.delete(socket)
-			console.log(`User "${myUser}" disconnected`)
+			console.log(`User "${myUserId}" disconnected`)
 		})
 	})
 }

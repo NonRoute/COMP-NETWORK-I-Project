@@ -1,11 +1,11 @@
 export type Group = {
 	messages: Message[]
-	users: string[]
+	usersId: string[]
 }
 
 export type Message = {
 	id: string
-	user: string
+	userId: string
 	value: string
 	time: number
 }

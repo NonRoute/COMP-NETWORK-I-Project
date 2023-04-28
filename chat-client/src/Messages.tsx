@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Message } from './types'
-import { Socket } from 'socket.io-client'
 import { DateTimeFormatOptions } from 'intl'
 
-function Messages({ socket, groupName }: { socket: any; groupName: string }) {
+function Messages({ socket, groupName, users }: { socket: any; groupName: string; users: [string, string][] }) {
 	const [messages, setMessages] = useState<Message[]>([])
 	const timeOptions: DateTimeFormatOptions = {
 		timeZone: 'Asia/Bangkok',
@@ -13,6 +12,10 @@ function Messages({ socket, groupName }: { socket: any; groupName: string }) {
 		hour: 'numeric',
 		minute: 'numeric',
 		hour12: true,
+	}
+
+	function getNickname(userId: string) {
+		return users.find((user) => user[0] === userId)[1]
 	}
 
 	useEffect(() => {
@@ -54,7 +57,7 @@ function Messages({ socket, groupName }: { socket: any; groupName: string }) {
 						<li className="list-none">
 							<span className="flex items-center">
 								<button className="text-blue-600 hover:underline focus:outline-none">
-									<b>{message.user}</b>
+									<b>{getNickname(message.userId)}</b>
 								</button>
 								<i className="ml-2 text-gray-600 opacity-80">
 									{new Date(message.time).toLocaleTimeString('en-US', timeOptions)}
