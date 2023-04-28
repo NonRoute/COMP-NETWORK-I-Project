@@ -1,4 +1,5 @@
 require('dotenv').config()
+import { User } from '@okta/okta-sdk-nodejs'
 import { Group, Message } from './types'
 import { Server } from 'socket.io'
 import { v4 as uuidv4 } from 'uuid'
@@ -16,11 +17,11 @@ const oktaClient = new okta.Client({
 	token: process.env.TOKEN,
 })
 
-const users = new Map<any, string>()
+const users = new Map<any, [string, string]>() // { socket : [userId , nickname ] }
 const groups = new Map<string, Group>()
-const allUsers = new Set<string>()
+const allUsers = new Map<string, string>()
 
-const defaultUser = 'Anonymous'
+const defaultUser = ['Anonymous', 'Anonymous']
 
 async function authHandler(socket, next) {
 	const { token = null } = socket.handshake.query || {}
@@ -35,8 +36,12 @@ async function authHandler(socket, next) {
 				claims: { sub },
 			} = await jwtVerifier.verifyAccessToken(tokenValue, 'api://default')
 			const user = await oktaClient.getUser(sub)
-			const name = [user.profile.firstName, user.profile.lastName].filter(Boolean).join(' ')
-			users.set(socket, name)
+			const userId = user.id
+			if (!allUsers.has(userId)) {
+				const nickname = [user.profile.firstName, user.profile.lastName].filter(Boolean).join(' ')
+				allUsers.set(userId, nickname)
+			}
+			users.set(socket, [userId, allUsers.get(userId)])
 		} catch (error) {
 			console.log(error)
 		}
@@ -52,8 +57,8 @@ function saveChatMessagesToFile(filename) {
 }
 
 function saveUsersToFile(filename) {
-	const usernamesArray = Array.from(allUsers)
-	const data = JSON.stringify(usernamesArray, null, 1)
+	const usernamesObject = Object.fromEntries(allUsers)
+	const data = JSON.stringify(usernamesObject, null, 1)
 	fs.writeFileSync(filename, data, 'utf-8')
 }
 
@@ -77,10 +82,9 @@ function loadChatMessagesFromFile(filename) {
 function loadUsernameFromFile(filename) {
 	try {
 		const data = fs.readFileSync(filename, 'utf-8')
-		const usernames = JSON.parse(data)
-		for (const username of usernames) {
-			allUsers.add(username)
-			// console.log(username)
+		const usersObject = JSON.parse(data)
+		for (const username in usersObject) {
+			groups.set(username, usersObject[username])
 		}
 		console.log('Username list file has been downloaded to server.')
 	} catch (error) {
@@ -115,17 +119,18 @@ process.on('SIGTERM', () => {
 function chat(io: Server) {
 	io.use(authHandler)
 	io.on('connection', (socket) => {
-		const myUser = users.get(socket) ?? defaultUser
-		console.log(`User "${myUser}" connected`)
+		// const [myUser, nickname] = users.get(socket) ?? defaultUser
+		const [userId, nickname] = users.get(socket) ?? defaultUser
+		console.log(`User "${nickname}" connected`)
 
-		function sendOtherUser(username) {
-			socket.emit('otherUser', username)
+		function sendOtherUser(userId, nickname) {
+			socket.emit('otherUser', [userId, nickname])
 		}
 
 		socket.on('getAllUser', () => {
-			allUsers.forEach((username) => {
-				if (username !== myUser) {
-					sendOtherUser(username)
+			allUsers.forEach((userId, nickname) => {
+				if (userId !== userId) {
+					sendOtherUser(userId, nickname)
 				}
 			})
 		})

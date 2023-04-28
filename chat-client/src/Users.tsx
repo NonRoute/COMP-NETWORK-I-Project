@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react'
 
 function Users({ socket, onClickUser }: { socket: any; onClickUser: (groupName: string) => void }) {
-	const [users, setUsers] = useState<string[]>([])
+	const [users, setUsers] = useState<Array<[string, string]>>([])
 
 	useEffect(() => {
-		socket.on('otherUser', (user) => {
+		socket.on('otherUser', (user: [string, string]) => {
 			setUsers((prevUsers) => [...prevUsers, user])
 		})
 
@@ -19,14 +19,14 @@ function Users({ socket, onClickUser }: { socket: any; onClickUser: (groupName: 
 	return (
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Other Users:</h3>
-			{users.map((user) => {
+			{users.map(([userId, nickname]) => {
 				return (
 					<button
 						className="mb-1 text-left w-full text-blue-600 hover:text-blue-800"
-						onClick={() => onClickUser(user)}
-						key={user}
+						onClick={() => onClickUser(userId)}
+						key={userId}
 					>
-						{user}
+						{nickname}
 					</button>
 				)
 			})}
