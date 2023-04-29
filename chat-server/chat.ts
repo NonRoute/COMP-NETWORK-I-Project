@@ -19,7 +19,7 @@ const oktaClient = new okta.Client({
 
 const users = new Map<any, [string, string]>() // { socket : [userId , nickname ] }
 const groups = new Map<string, Group>()
-const allUsers = new Map<string, string>()
+const allUsers = new Map<string, string>() // {userId : nickname}
 
 const defaultUser = ['Anonymous', 'Anonymous']
 
@@ -42,6 +42,7 @@ async function authHandler(socket, next) {
 				allUsers.set(userId, nickname)
 			}
 			users.set(socket, [userId, allUsers.get(userId)])
+			// console.log(userId, allUsers.get(userId))
 		} catch (error) {
 			console.log(error)
 		}
@@ -119,19 +120,20 @@ process.on('SIGTERM', () => {
 function chat(io: Server) {
 	io.use(authHandler)
 	io.on('connection', (socket) => {
-		// const [myUser, nickname] = users.get(socket) ?? defaultUser
-		const myUserId = (users.get(socket) ?? defaultUser)[0]
-		console.log(`User "${myUserId}" connected`)
+		const [myUserId, nickname] = users.get(socket) ?? defaultUser
+		console.log(`User ${myUserId} ${nickname} connected`)
+
+		socket.on('getMyId', () => {
+			socket.emit('getMyId', myUserId)
+		})
 
 		function sendOtherUser(userId, nickname) {
 			socket.emit('otherUser', [userId, nickname])
 		}
 
 		socket.on('getAllUser', () => {
-			allUsers.forEach((userId, nickname) => {
-				if (userId !== userId) {
-					sendOtherUser(userId, nickname)
-				}
+			allUsers.forEach((nickname, userId) => {
+				sendOtherUser(userId, nickname)
 			})
 		})
 

@@ -1,13 +1,7 @@
 // Users.tsx
 import React from 'react'
 
-function Users({
-	onClickUser,
-	users,
-}: {
-	onClickUser: (groupName: string) => void
-	users: [string, string][]
-}) {
+function Users({ onClickUser, users }: { onClickUser: (groupName: string) => void; users: [string, string][] }) {
 	return (
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Other Users:</h3>

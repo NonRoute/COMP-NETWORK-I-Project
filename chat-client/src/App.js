@@ -18,6 +18,8 @@ function App() {
 	const [socket, setSocket] = useState(null)
 	const [selectGroup, setSelectGroup] = useState(null)
 	const [users, setUsers] = useState([])
+	const [myUserId, setMyUserId] = useState(null)
+	const [receivedMyUserId, setReceivedMyUserId] = useState(false)
 
 	function handleSelectGroup(groupName) {
 		setSelectGroup(groupName)
@@ -61,18 +63,35 @@ function App() {
 				setSelectGroup(groupName)
 			})
 
-			socket.on('otherUser', (user) => {
-				setUsers((prevUsers) => [...prevUsers, user])
-			})
+			socket.emit('getMyId')
 
-			socket.emit('getAllUser')
+			socket.on('getMyId', (userId) => {
+				setMyUserId(userId)
+				setReceivedMyUserId(true)
+			})
 
 			return () => {
 				socket.off('DMGroupName')
-				socket.off('otherUser')
+				socket.off('getMyId')
 			}
 		}
 	}, [socket])
+
+	useEffect(() => {
+		if (receivedMyUserId && socket) {
+			socket.emit('getAllUser')
+
+			socket.on('otherUser', ([userId, nickname]) => {
+				if (userId !== myUserId) {
+					setUsers((prevUsers) => [...prevUsers, [userId, nickname]])
+				}
+			})
+
+			return () => {
+				socket.off('otherUser')
+			}
+		}
+	}, [receivedMyUserId, socket, myUserId])
 
 	return (
 		<div className="bg-gradient-to-r from-gray-800 to-gray-700 border-b-1 min-h-screen">
@@ -111,7 +130,7 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
-					<Users onClickUser={handleSelectUser} users={users}/>
+					<Users onClickUser={handleSelectUser} users={users} />
 					<Groups socket={socket} onClickGroup={handleSelectGroup} />
 					{selectGroup ? <div>current group: {selectGroup}</div> : <div>no group selected</div>}
 					{selectGroup ? (
