@@ -153,7 +153,15 @@ function App() {
 					)}
 					<Users onClickUser={handleSelectUser} otherUsers={getOtherUsers()} />
 					<Groups socket={socket} onClickGroup={handleSelectGroup} />
-					{selectGroup ? <div>current group: {selectGroup}</div> : <div>no group selected</div>}
+					{selectGroup ? (
+						<div className="px-2 py-1 bg-gray-600 rounded-md text-white mt-2 w-full text-center font-bold">
+							Current Group: {selectGroup}
+						</div>
+					) : (
+						<div className="px-2 py-1 bg-gray-600 rounded-md text-white mt-2 w-full text-center font-bold">
+							no group selected
+						</div>
+					)}
 					{selectGroup ? (
 						<>
 							<Messages socket={socket} groupName={selectGroup} users={users} />
