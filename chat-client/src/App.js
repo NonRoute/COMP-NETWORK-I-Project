@@ -131,24 +131,26 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
-					<div className="mb-2">
-						<label htmlFor="nickname" className="mr-2">
-							Set Nickname:
-						</label>
-						<input
-							type="text"
-							id="nickname"
-							className="px-2 py-0.5 border-2 border-gray-500 rounded-md"
-							value={newNickname}
-							onChange={(e) => setNewNickname(e.target.value)}
-						/>
-						<button
-							className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-							onClick={() => handleSetNickname()}
-						>
-							Update
-						</button>
-					</div>
+					{user && (
+						<div className="mb-2">
+							<label htmlFor="nickname" className="mr-2">
+								Set Nickname:
+							</label>
+							<input
+								type="text"
+								id="nickname"
+								className="px-2 py-0.5 border-2 border-gray-500 rounded-md"
+								value={newNickname}
+								onChange={(e) => setNewNickname(e.target.value)}
+							/>
+							<button
+								className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+								onClick={() => handleSetNickname()}
+							>
+								Update
+							</button>
+						</div>
+					)}
 					<Users onClickUser={handleSelectUser} otherUsers={getOtherUsers()} />
 					<Groups socket={socket} onClickGroup={handleSelectGroup} />
 					{selectGroup ? <div>current group: {selectGroup}</div> : <div>no group selected</div>}
