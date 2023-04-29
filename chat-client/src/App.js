@@ -56,6 +56,10 @@ function App() {
 		return option
 	}
 
+	function getOtherUsers() {
+		return users.filter(([userId, nickname]) => userId !== myUserId)
+	}
+
 	useEffect(() => {
 		const newSocket = io.connect(
 			process.env.REACT_APP_SERVER_URL || `http://${window.location.hostname}:3000`,
@@ -71,35 +75,26 @@ function App() {
 				setSelectGroup(groupName)
 			})
 
-			socket.emit('getMyId')
-
 			socket.on('getMyId', (userId) => {
 				setMyUserId(userId)
 				setReceivedMyUserId(true)
 			})
 
-			return () => {
-				socket.off('DMGroupName')
-				socket.off('getMyId')
-			}
-		}
-	}, [socket])
-
-	useEffect(() => {
-		if (receivedMyUserId && socket) {
+			socket.emit('getMyId')
 			socket.emit('getAllUser')
 
 			socket.on('otherUser', ([userId, nickname]) => {
-				if (userId !== myUserId) {
-					setUsers((prevUsers) => [...prevUsers, [userId, nickname]])
-				}
+				console.log(nickname)
+				setUsers((prevUsers) => [...prevUsers, [userId, nickname]])
 			})
 
 			return () => {
+				socket.off('DMGroupName')
+				socket.off('getMyId')
 				socket.off('otherUser')
 			}
 		}
-	}, [receivedMyUserId, socket, myUserId])
+	}, [socket])
 
 	return (
 		<div className="bg-gradient-to-r from-gray-800 to-gray-700 border-b-1 min-h-screen">
@@ -156,7 +151,7 @@ function App() {
 							Update
 						</button>
 					</div>
-					<Users onClickUser={handleSelectUser} users={users} />
+					<Users onClickUser={handleSelectUser} otherUsers={getOtherUsers()} />
 					<Groups socket={socket} onClickGroup={handleSelectGroup} />
 					{selectGroup ? <div>current group: {selectGroup}</div> : <div>no group selected</div>}
 					{selectGroup ? (

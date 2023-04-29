@@ -1,11 +1,11 @@
 // Users.tsx
 import React from 'react'
 
-function Users({ onClickUser, users }: { onClickUser: (groupName: string) => void; users: [string, string][] }) {
+function Users({ onClickUser,  otherUsers }: { onClickUser: (groupName: string) => void; otherUsers: [string, string][] }) {
 	return (
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Other Users:</h3>
-			{users.map(([userId, nickname]) => {
+			{otherUsers.map(([userId, nickname]) => {
 				return (
 					<button
 						className="mb-1 text-left w-full text-blue-600 hover:text-blue-800"
