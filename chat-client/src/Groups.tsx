@@ -55,7 +55,7 @@ function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupNam
 					className="w-full px-2 py-1 border-2 border-gray-500 rounded-md"
 					autoFocus
 					value={groupName}
-					placeholder="add group"
+					placeholder="Add group"
 					onChange={(e) => {
 						setGroupName(e.currentTarget.value)
 					}}

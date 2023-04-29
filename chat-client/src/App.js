@@ -31,6 +31,7 @@ function App() {
 	}
 
 	function handleSetNickname() {
+		setMyNickname(newNickname)
 		if (socket && newNickname.trim() !== '') {
 			socket.emit('setNickname', newNickname)
 			setNewNickname('')
@@ -133,6 +134,9 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
+					<div className="px-2 py-1 mb-2 bg-gray-600 rounded-md text-white mt-2 w-full text-center font-bold">
+						Your Nickname: {myNickname}
+					</div>
 					{user && (
 						<div className="mb-2">
 							<label htmlFor="nickname" className="mr-2">
@@ -161,7 +165,7 @@ function App() {
 						</div>
 					) : (
 						<div className="px-2 py-1 bg-gray-600 rounded-md text-white mt-2 w-full text-center font-bold">
-							no group selected
+							No group selected
 						</div>
 					)}
 					{selectGroup ? (
