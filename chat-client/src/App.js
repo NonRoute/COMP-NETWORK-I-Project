@@ -19,7 +19,6 @@ function App() {
 	const [selectGroup, setSelectGroup] = useState(null)
 	const [users, setUsers] = useState([])
 	const [myUserId, setMyUserId] = useState(null)
-	const [receivedMyUserId, setReceivedMyUserId] = useState(false)
 	const [newNickname, setNewNickname] = useState('')
 
 	function handleSelectGroup(groupName) {
@@ -77,7 +76,6 @@ function App() {
 
 			socket.on('getMyId', (userId) => {
 				setMyUserId(userId)
-				setReceivedMyUserId(true)
 			})
 
 			socket.emit('getMyId')

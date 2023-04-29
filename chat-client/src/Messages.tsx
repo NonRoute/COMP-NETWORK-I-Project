@@ -15,7 +15,12 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 	}
 
 	function getNickname(userId: string) {
+		console.log(users)
 		return users.find((user) => user[0] === userId)[1]
+	}
+
+	function handleDeleteMessage(messageId) {
+		socket.emit('deleteMessage', { groupName, messageId })
 	}
 
 	useEffect(() => {
@@ -26,12 +31,19 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 			})
 		})
 
+		socket.on('deleteMessage', (messageId) => {
+			setMessages((prevMessages) => {
+				return prevMessages.filter((message) => message.id === messageId)
+			})
+		})
+
 		return () => {
 			socket.off('newGroupMessage')
 		}
 	}, [socket])
 
 	useEffect(() => {
+		console.log(groupName)
 		setMessages([])
 		socket.emit('getGroupMessages', groupName)
 		socket.emit('joinGroup', groupName)
@@ -59,6 +71,12 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 								<i className="ml-2 text-gray-600 opacity-80">
 									{new Date(message.time).toLocaleTimeString('en-US', timeOptions)}
 								</i>
+								<button
+									className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+									onClick={() => handleDeleteMessage(message.id)}
+								>
+									Delete
+								</button>
 							</span>
 							<div className="clear-both pt-1 mt-0.5 pb-3 block">{message.value}</div>
 						</li>

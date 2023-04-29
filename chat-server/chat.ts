@@ -206,6 +206,14 @@ function chat(io: Server) {
 			}
 		})
 
+		socket.on('deleteMessage', ({ groupName, messageId }) => {
+			groups.get(groupName).messages = groups
+				.get(groupName)
+				.messages.filter((message) => message.id === messageId)
+
+			io.to(groupName).emit('deleteMessage', { messageId })
+		})
+
 		// Also create if not exist
 		socket.on('getDMGroupName', (otherUserId: string) => {
 			let groupName: string
