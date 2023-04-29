@@ -20,6 +20,7 @@ function App() {
 	const [users, setUsers] = useState([])
 	const [myUserId, setMyUserId] = useState(null)
 	const [receivedMyUserId, setReceivedMyUserId] = useState(false)
+	const [newNickname, setNewNickname] = useState('')
 
 	function handleSelectGroup(groupName) {
 		setSelectGroup(groupName)
@@ -27,6 +28,13 @@ function App() {
 
 	function handleSelectUser(userId) {
 		socket.emit('getDMGroupName', userId)
+	}
+
+	function handleSetNickname() {
+		if (socket && newNickname.trim() !== '') {
+			socket.emit('setNickname', newNickname)
+			setNewNickname('')
+		}
 	}
 
 	function getSocketOptions() {
@@ -130,6 +138,23 @@ function App() {
 			</header>
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
+					<div className="mb-2">
+						<label htmlFor="nickname" className="mr-2">
+							Set Nickname:
+						</label>
+						<input
+							type="text"
+							id="nickname"
+							value={newNickname}
+							onChange={(e) => setNewNickname(e.target.value)}
+						/>
+						<button
+							className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+							onClick={() => handleSetNickname()}
+						>
+							Update
+						</button>
+					</div>
 					<Users onClickUser={handleSelectUser} users={users} />
 					<Groups socket={socket} onClickGroup={handleSelectGroup} />
 					{selectGroup ? <div>current group: {selectGroup}</div> : <div>no group selected</div>}

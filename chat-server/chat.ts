@@ -137,6 +137,11 @@ function chat(io: Server) {
 			})
 		})
 
+		socket.on('setNickname', (newNickname) => {
+			users.set(socket, [myUserId, newNickname])
+			allUsers.set(myUserId, newNickname)
+		})
+
 		function sendNewGroup(groupName: string, group: Group) {
 			socket.emit('newGroup', { name: groupName, ...group })
 		}
