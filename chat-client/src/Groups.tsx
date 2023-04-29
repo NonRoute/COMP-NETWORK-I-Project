@@ -25,6 +25,7 @@ function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupNam
 	function handleAddGroup(e) {
 		e.preventDefault()
 		socket.emit('createGroup', groupName)
+		setGroupName('')
 	}
 
 	return (
