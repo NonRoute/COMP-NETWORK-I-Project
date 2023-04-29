@@ -9,8 +9,13 @@ function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupNam
 		socket.on('newGroup', (group: Group) => {
 			setGroups((prevGroups) => {
 				if (!group.name.includes('-')) {
-					const newGroups = [...prevGroups, group]
-					return newGroups
+					if (prevGroups) {
+						const newGroups = [...prevGroups, group]
+						return newGroups
+					} else {
+						const newGroups = [group]
+						return newGroups
+					}
 				}
 			})
 		})
@@ -31,18 +36,19 @@ function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupNam
 	return (
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Groups:</h3>
-			<div className="flex gap-2">
-				{groups.map((group) => {
-					return (
-						<button
-							className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-							onClick={() => onClickGroup(group.name)}
-							key={group.name}
-						>
-							{group.name}
-						</button>
-					)
-				})}
+			<div className="flex gap-2 flex-wrap">
+				{groups &&
+					groups.map((group) => {
+						return (
+							<button
+								className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+								onClick={() => onClickGroup(group.name)}
+								key={group.name}
+							>
+								{group.name}
+							</button>
+						)
+					})}
 			</div>
 			<form className="max-w-xl w-full mx-auto mt-2" onSubmit={handleAddGroup}>
 				<input
