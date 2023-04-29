@@ -15,8 +15,11 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 	}
 
 	function getNickname(userId: string) {
-		console.log(users)
-		return users.find((user) => user[0] === userId)[1]
+		try {
+			return users.find((user) => user[0] === userId)[1]
+		} catch {
+			return 'Anonymous'
+		}
 	}
 
 	function handleDeleteMessage(messageId) {

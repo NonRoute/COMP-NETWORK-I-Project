@@ -85,7 +85,7 @@ function loadUsernameFromFile(filename) {
 		const data = fs.readFileSync(filename, 'utf-8')
 		const usersObject = JSON.parse(data)
 		for (const username in usersObject) {
-			groups.set(username, usersObject[username])
+			users.set(username, usersObject[username])
 		}
 		console.log('Username list file has been downloaded to server.')
 	} catch (error) {
