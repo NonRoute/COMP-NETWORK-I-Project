@@ -124,8 +124,8 @@ function chat(io: Server) {
 		console.log(`User ${myUserId} ${nickname} connected`)
 
 		// ------------------------ HANDLE USERNAMES ----------------------
-		socket.on('getMyId', () => {
-			socket.emit('getMyId', myUserId)
+		socket.on('getMyUser', () => {
+			socket.emit('getMyUser', [myUserId, nickname])
 		})
 
 		function sendOtherUser(userId, nickname) {

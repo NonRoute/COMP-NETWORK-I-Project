@@ -19,6 +19,7 @@ function App() {
 	const [selectGroup, setSelectGroup] = useState(null)
 	const [users, setUsers] = useState([])
 	const [myUserId, setMyUserId] = useState(null)
+	const [myNickname, setMyNickname] = useState(null)
 	const [newNickname, setNewNickname] = useState('')
 
 	function handleSelectGroup(groupName) {
@@ -74,11 +75,12 @@ function App() {
 				setSelectGroup(groupName)
 			})
 
-			socket.on('getMyId', (userId) => {
+			socket.on('getMyUser', ([userId, myNickname]) => {
 				setMyUserId(userId)
+				setMyNickname(myNickname)
 			})
 
-			socket.emit('getMyId')
+			socket.emit('getMyUser')
 			socket.emit('getAllUser')
 
 			socket.on('otherUser', ([userId, nickname]) => {
@@ -88,7 +90,7 @@ function App() {
 
 			return () => {
 				socket.off('DMGroupName')
-				socket.off('getMyId')
+				socket.off('getMyUser')
 				socket.off('otherUser')
 			}
 		}
