@@ -123,6 +123,7 @@ function chat(io: Server) {
 		const [myUserId, nickname] = users.get(socket) ?? defaultUser
 		console.log(`User ${myUserId} ${nickname} connected`)
 
+		// ------------------------ HANDLE USERNAMES ----------------------
 		socket.on('getMyId', () => {
 			socket.emit('getMyId', myUserId)
 		})
@@ -137,11 +138,13 @@ function chat(io: Server) {
 			})
 		})
 
+		// ------------------------ HANDLE NICKNAME ----------------------
 		socket.on('setNickname', (newNickname) => {
 			users.set(socket, [myUserId, newNickname])
 			allUsers.set(myUserId, newNickname)
 		})
 
+		// ------------------------ HANDLE GROUPCHAT ----------------------
 		function sendNewGroup(groupName: string, group: Group) {
 			socket.emit('newGroup', { name: groupName, ...group })
 		}
@@ -179,6 +182,7 @@ function chat(io: Server) {
 			}
 		})
 
+		// ------------------------ HANDLE MESSAGE ----------------------
 		socket.on('groupMessage', ({ groupName, value }) => {
 			if (groups.has(groupName)) {
 				const group = groups.get(groupName)!
