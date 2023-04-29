@@ -145,6 +145,7 @@ function App() {
 						<input
 							type="text"
 							id="nickname"
+							className="px-2 py-0.5 border-2 border-gray-500 rounded-md"
 							value={newNickname}
 							onChange={(e) => setNewNickname(e.target.value)}
 						/>
