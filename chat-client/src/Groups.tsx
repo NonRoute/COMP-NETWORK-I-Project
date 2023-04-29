@@ -8,8 +8,10 @@ function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupNam
 	useEffect(() => {
 		socket.on('newGroup', (group: Group) => {
 			setGroups((prevGroups) => {
-				const newGroups = [...prevGroups, group]
-				return newGroups
+				if (!group.name.includes('-')) {
+					const newGroups = [...prevGroups, group]
+					return newGroups
+				}
 			})
 		})
 
