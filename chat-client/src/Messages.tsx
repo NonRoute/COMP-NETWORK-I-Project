@@ -28,6 +28,7 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 
 	useEffect(() => {
 		socket.on('newGroupMessage', (message: Message) => {
+			console.log(message)
 			setMessages((prevMessages) => {
 				const newMessages = [...prevMessages, message]
 				return newMessages
@@ -35,8 +36,10 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 		})
 
 		socket.on('deleteMessage', (messageId) => {
+			console.log(messageId)
+			console.log(messages)
 			setMessages((prevMessages) => {
-				return prevMessages.filter((message) => message.id === messageId)
+				return prevMessages.filter((message) => message.id !== messageId)
 			})
 		})
 
@@ -46,7 +49,6 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 	}, [socket])
 
 	useEffect(() => {
-		console.log(groupName)
 		setMessages([])
 		socket.emit('getGroupMessages', groupName)
 		socket.emit('joinGroup', groupName)

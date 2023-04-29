@@ -211,7 +211,7 @@ function chat(io: Server) {
 				.get(groupName)
 				.messages.filter((message) => message.id === messageId)
 
-			io.to(groupName).emit('deleteMessage', { messageId })
+			io.to(groupName).emit('deleteMessage', messageId)
 		})
 
 		// Also create if not exist
