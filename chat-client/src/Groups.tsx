@@ -32,7 +32,7 @@ function Groups({ socket, onClickGroup }: { socket: any; onClickGroup: (groupNam
 		<div className="max-w-xl w-full">
 			<h3 className="font-bold mb-2">Groups:</h3>
 			<div className="flex gap-2">
-				{groups.map((group) => {
+				{groups && groups.map((group) => {
 					return (
 						<button
 							className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
