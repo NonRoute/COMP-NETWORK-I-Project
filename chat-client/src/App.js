@@ -7,6 +7,7 @@ import Users from './Users'
 import { useOktaAuth } from '@okta/okta-react'
 import { useAuth } from './auth'
 import { Link } from 'react-router-dom'
+import ReactPlayer from 'react-player'
 
 function App() {
 	const { oktaAuth, authState } = useOktaAuth()
@@ -21,6 +22,9 @@ function App() {
 	const [myUserId, setMyUserId] = useState(null)
 	const [myNickname, setMyNickname] = useState(null)
 	const [newNickname, setNewNickname] = useState('')
+	const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+	const [musicNumber, setMusicNumber] = useState(0)
+	const [volume, setVolume] = useState(0.5)
 
 	function handleSelectGroup(groupName) {
 		setSelectGroup(groupName)
@@ -97,8 +101,111 @@ function App() {
 		}
 	}, [socket])
 
+	const MusicList = [
+		{ url: 'https://www.youtube.com/watch?v=9E6b3swbnWg', title: 'Chopin - Nocturne op.9 No.2' },
+		{
+			url: 'https://www.youtube.com/watch?v=df-eLzao63I',
+			title: "Piano Concerto No. 21 - Andante 'Elvira Madigan'",
+		},
+		{ url: 'https://youtu.be/RoQDRZP1yvQ', title: 'Arrival by Andersson/Ulvaeus' },
+		{ url: 'https://youtu.be/82l3q15YfYQ', title: 'Tchaikovsky - Piano Concerto No. 1' },
+		{ url: 'https://youtu.be/YyknBTm_YyM', title: 'Camille Saint-Saëns - Danse Macabre' },
+		{
+			url: 'https://youtu.be/XX6GHiFKovw',
+			title: 'Prokofiev: Romeo and Juliet, Op. 64 / Act 1 - Dance Of The Knights',
+		},
+	]
+
+	const MusicPlayer = () => {
+		return (
+			<div className="flex flex-col bg-gray-600 rounded-md p-2 text-white w-full">
+				<div className="flex flex-row justify-center items-center gap-3">
+					<button
+						onClick={() => {
+							setMusicNumber((prev) => {
+								if (prev == MusicList.length - 1) {
+									return 0
+								} else {
+									return prev + 1
+								}
+							})
+						}}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+							<path d="M5.055 7.06c-1.25-.714-2.805.189-2.805 1.628v8.123c0 1.44 1.555 2.342 2.805 1.628L12 14.471v2.34c0 1.44 1.555 2.342 2.805 1.628l7.108-4.061c1.26-.72 1.26-2.536 0-3.256L14.805 7.06C13.555 6.346 12 7.25 12 8.688v2.34L5.055 7.06z" />
+						</svg>
+					</button>
+					<button
+						onClick={() => {
+							setIsMusicPlaying((prev) => !prev)
+						}}
+					>
+						{isMusicPlaying ? (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								class="w-6 h-6"
+							>
+								<path
+									fill-rule="evenodd"
+									d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+						) : (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 24 24"
+								fill="currentColor"
+								class="w-6 h-6"
+							>
+								<path
+									fill-rule="evenodd"
+									d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+						)}
+					</button>
+					<div class="">
+						<input
+							type="range"
+							min="0"
+							max="1"
+							step="0.01"
+							class="range-slider h-2 appearance-none rounded-md bg-gray-200 outline-none"
+							value={volume}
+							onChange={(e) => {
+								setVolume(e.target.value)
+							}}
+						/>
+					</div>
+				</div>
+				<div>
+					<p className="font-bold text-center">Music : {MusicList[musicNumber].title}</p>
+				</div>
+			</div>
+		)
+	}
+
 	return (
 		<div className="bg-gradient-to-r from-gray-800 to-gray-700 border-b-1 min-h-screen">
+			<ReactPlayer
+				className="hidden"
+				url={MusicList[musicNumber].url}
+				playing={isMusicPlaying}
+				volume={volume}
+				onEnded={() => {
+					setMusicNumber((prev) => {
+						if (prev == MusicList.length - 1) {
+							return 0
+						} else {
+							return prev + 1
+						}
+					})
+				}}
+			/>
 			<header className="py-2 px-4 text-white">
 				{!authState ? (
 					<div>Loading...</div>
@@ -132,8 +239,10 @@ function App() {
 					</div>
 				)}
 			</header>
+
 			{socket ? (
 				<div className="bg-gray-50 p-2 mx-auto mt-2 rounded-md max-w-xl flex flex-col items-center justify-center">
+					<MusicPlayer />
 					<div className="px-2 py-1 mb-2 bg-gray-600 rounded-md text-white mt-2 w-full text-center font-bold">
 						Your Nickname: {myNickname}
 					</div>
