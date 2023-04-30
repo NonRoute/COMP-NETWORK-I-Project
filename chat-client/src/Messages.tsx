@@ -70,7 +70,7 @@ function Messages({ socket, groupName, users }: { socket: any; groupName: string
 					>
 						<li className="list-none">
 							<span className="flex items-center">
-								<button className="text-blue-600 hover:underline focus:outline-none">
+								<button className="text-blue-600 focus:outline-none">
 									<b>{getNickname(message.userId)}</b>
 								</button>
 								<i className="ml-2 text-gray-600 opacity-80">
