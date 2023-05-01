@@ -1,6 +1,10 @@
 # COMP-NETWORK-I-Project
 2110471 COMP NETWORK I (2022/2) Project - Socket Programming
 
+<p align="center">
+  <img src="./chat.png" width="700">
+</p>
+
 ## Requirement
 1. (1.5) The system must have at least 2 computers for implementing the chat application,
 one for the server and client and others for the client.
