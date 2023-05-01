@@ -114,6 +114,10 @@ function App() {
 			url: 'https://youtu.be/XX6GHiFKovw',
 			title: 'Prokofiev: Romeo and Juliet, Op. 64 / Act 1 - Dance Of The Knights',
 		},
+		{
+			url: 'https://youtu.be/8QT7ITv9Ecs',
+			title: 'Chopin - Polonaise, Op. 53 (Kissin)',
+		},
 	]
 
 	const MusicPlayer = () => {
